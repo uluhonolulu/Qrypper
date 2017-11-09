@@ -19,34 +19,20 @@ var accounts;
 var account;
 
 window.App = {
-  start: function() {
+  start: async function() {
     var self = this;
 
     // Bootstrap the MetaCoin abstraction for Use.
     Qrypper.setProvider(web3.currentProvider);
-
+    //var accounts = await web3.eth.getAccounts();
+    var qrypper = await Qrypper.deployed();
+    debugger;
+    var count = (await qrypper.count()).toNumber();  //this is how you get public variables
+    //var qryps = await qrypper.getQryps();
+    //var data = qrypper.getQryps.getData();
+    //var result = web3.eth.call({to: qrypper, data: data});
     // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts(function(err, accs) {
-      if (err != null) {
-        alert("There was an error fetching your accounts.");
-        return;
-      }
 
-      if (accs.length == 0) {
-        alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-        return;
-      }
-
-      accounts = accs;
-      account = accounts[0];
-
-      //self.refreshBalance();
-      Qrypper.deployed().then(function(qrypper) {
-        return qrypper.getStuff();
-      }).then(function displayValue(value) {
-        self.setStatus(value);
-      });
-    });
   },
 
   setStatus: function(message) {
@@ -99,9 +85,9 @@ window.addEventListener('load', function() {
     // Use Mist/MetaMask's provider
     window.web3 = new Web3(web3.currentProvider);
   } else {
-    console.warn("No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+    console.warn("No web3 detected. Falling back to http://localhost:9545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:9545"));
   }
 
   App.start();
